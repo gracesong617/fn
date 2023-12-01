@@ -88,8 +88,8 @@ io.sockets.on("connection", (socket) => {
   });
 
   socket.on("position1", function (position1) {
-    socket.broadcast.emit("position1Fresh", position1);
-    if (position1 <= 50) {
+    socket.broadcast.emit("position1Fresh", { x: position1.x, y: position1.y });
+    if (position1.y <= 50) {
         var result = "1p";
         socket.emit("gameOver", result);
         socket.broadcast.emit("gameOver", result);
@@ -98,8 +98,8 @@ io.sockets.on("connection", (socket) => {
   });
   
   socket.on("position2", function (position2) {
-    socket.broadcast.emit("position2Fresh", position2);
-    if (position2 <= 50) {
+    socket.broadcast.emit("position2Fresh", { x: position2.x, y: position2.y });
+    if (position2.y <= 50) {
         var result = "2p";
         socket.broadcast.emit("gameOver", result);
         socket.emit("gameOver", result);

@@ -87,8 +87,8 @@ Login.prototype.init = function () {
 //game
 
 let p1, p2, p1Image, p2Image, flashImage, roadImage, bgImage;
-let p1_X,p2_X;
-let p1_Y =520,p2_Y = 520;
+let p1_X = 310,p2_X = 410;
+let p1_Y = 520,p2_Y = 520;
 let ystart = 520;
 let move;
 let isKeyPressed = false;
@@ -102,6 +102,7 @@ function preload(){
     flashImage = loadImage('images/flash.jpg');
     roadImage = loadImage('images/road_bg.jpg');
     bgImage = loadImage('images/bg1.png');
+
 }
 
 function setup() {
@@ -121,6 +122,9 @@ function setup() {
 function draw(){
     clear();
     background("#f3e8cc");
+    fill("#ffe5e5");
+    noStroke();
+    rect(200,20,1080,700);
     image(bgImage,0,0,1280,720);
 
      // hint
@@ -139,21 +143,23 @@ function draw(){
     }
 
       //p1
-      image(p1Image,310,p1_Y);
+      image(p1Image,p1_X,p1_Y);
       //p2
-      image(p2Image,410,p2_Y);
+      image(p2Image,p2_X,p2_Y);
 
 
 
     socket.on("position1Fresh", function (position1) {
         if (playerID == "2p") {
-          p1_Y = position1;
+          p1_Y = position1.y;
+          p1_X = position1.x;
         }
     });
   
     socket.on("position2Fresh", function (position2) {
         if (playerID == "1p") {
-          p2_Y = position2;
+          p2_Y = position2.y;
+          p2_X = position2.x;
         }
     });
 
@@ -169,13 +175,49 @@ function draw(){
 
 
 function keyPressed() {
+    //w
     if (keyCode === 87 && isKeyPressed === false) {
-        if (window.player == "1p") {
+        if (playerID == "1p") {
             p1_Y -= 10;
-            socket.emit("position1", p1_Y);
-        } else if (window.player == "2p") {
+            console.log("p1_Y:", p1_Y);
+            socket.emit("position1", { x: p1_X, y: p1_Y });
+        } else if (playerID == "2p") {
             p2_Y -= 10;
-            socket.emit("position2", p2_Y);
+            console.log("p2_Y:", p2_Y);
+            socket.emit("position2", { x: p2_X, y: p2_Y });
+        }
+        isKeyPressed = true;
+    }
+    //a
+    if (keyCode === 65 && isKeyPressed === false) {
+        if (playerID == "1p") {
+            p1_X -= 10;
+            socket.emit("position1", { x: p1_X, y: p1_Y });
+        } else if (playerID == "2p") {
+            p2_X -= 10;
+            socket.emit("position2", { x: p2_X, y: p2_Y });
+        }
+        isKeyPressed = true;
+    }
+    //s
+    if (keyCode === 83 && isKeyPressed === false) {
+        if (playerID == "1p") {
+            p1_Y += 10;
+            socket.emit("position1", { x: p1_X, y: p1_Y });
+        } else if (playerID == "2p") {
+            p2_Y += 10;
+            socket.emit("position2", { x: p2_X, y: p2_Y });
+        }
+        isKeyPressed = true;
+    }
+    //d
+    if (keyCode === 68 && isKeyPressed === false) {
+        if (playerID == "1p") {
+            p1_X += 10;
+            socket.emit("position1", { x: p1_X, y: p1_Y });
+        } else if (playerID == "2p") {
+            p2_X += 10;
+            socket.emit("position2", { x: p2_X, y: p2_Y });
         }
         isKeyPressed = true;
     }
@@ -183,6 +225,15 @@ function keyPressed() {
 
 function keyReleased() {
     if (keyCode === 87) {
+        isKeyPressed = false;
+    }
+    if (keyCode === 65) {
+        isKeyPressed = false;
+    }
+    if (keyCode === 83) {
+        isKeyPressed = false;
+    }
+    if (keyCode === 68) {
         isKeyPressed = false;
     }
 }
