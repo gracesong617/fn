@@ -86,7 +86,7 @@ Login.prototype.init = function () {
 
 //game
 
-let p1, p2, p1Image, p2Image, flashImage, roadImage;
+let p1, p2, p1Image, p2Image, flashImage, roadImage, bgImage;
 let p1_X,p2_X;
 let p1_Y =520,p2_Y = 520;
 let ystart = 520;
@@ -101,14 +101,15 @@ function preload(){
 
     flashImage = loadImage('images/flash.jpg');
     roadImage = loadImage('images/road_bg.jpg');
+    bgImage = loadImage('images/bg1.png');
 }
 
 function setup() {
-    createCanvas(800, 600);
-    background("#a5ddbf");
+    createCanvas(1280, 720);
     socket = io.connect();
 
     image(roadImage,200,50);
+   
 
 
     p1Image.resize(p1Image.width * 0.2, p1Image.height * 0.2);
@@ -119,7 +120,8 @@ function setup() {
 
 function draw(){
     clear();
-    background("#a5ddbf");
+    background("#f3e8cc");
+    image(bgImage,0,0,1280,720);
 
      // hint
      textSize(15);
