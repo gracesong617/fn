@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <h1 class="title">Game</h1>
+
+    <div class="build">
+        <h2 class="text">Create your room</h2>
+        <h3 class="text">Please click on the button to get the room code</h3>
+        <input type="button" value="bulid room" id="build-button">
+    </div>
+
+    <div class="result">
+        <span class="notice">error</span>
+        <span class="connect">connect faild</span>
+        <span class="text"></span>
+    </div>
+
+    <div class="join">
+        <h4 class="text">Join the room</h4>
+        <input type="text" placeholder="please input you room code" id="join-text">
+        <input type="button" value="join room" id="join-button">
+        <span class="text"></span>
+    </div>
+
+
+
+    <script src ="/socket.io/socket.io.js"></script>
+    <script src="app.js" charset="utf-8"></script>
+  </body>
+
+</html>
