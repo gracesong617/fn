@@ -1,4 +1,3 @@
-
 let socket = io.connect();
 let playerID;
 
@@ -93,6 +92,29 @@ let ystart = 520;
 let move;
 let isKeyPressed = false;
 
+const badArray = [
+    "images/bad1.png",
+    "images/bad2.png",
+    "images/bad3.png",
+    "images/bad4.png",
+];
+  
+const goodArray = [
+    "images/good1.png",
+    "images/good2.png",
+    "images/good3.png",
+    "images/good4.png",
+    "images/good5.png",
+    "images/good6.png",
+    "images/good7.png",
+    "images/good8.png",
+];
+
+let goodFoods = [];
+let badFoods = [];
+let goodImages = []; // 新增数组用于存储好食物图像
+let badImages = []; // 新增数组用于存储坏食物图像
+let foodsize= 20;
 
 function preload(){
     p1Image = loadImage('images/p1.png');
@@ -102,7 +124,32 @@ function preload(){
     flashImage = loadImage('images/flash.jpg');
     roadImage = loadImage('images/road_bg.jpg');
     bgImage = loadImage('images/bg1.png');
+   
+    // 加载好食物图像
+    for (let i = 0; i < goodArray.length; i++) {
+        goodImages.push(loadImage(goodArray[i]));
+    }
 
+    // 加载坏食物图像
+    for (let i = 0; i < badArray.length; i++) {
+        badImages.push(loadImage(badArray[i]));
+    }
+
+   // 随机生成好食物的初始位置
+   for (let i = 0; i < 60; i++) {
+    goodFoods.push({
+        x: random(200, 1240),
+        y: random(50, 660)
+    });
+}
+
+// 随机生成坏食物的初始位置
+for (let i = 0; i < 50; i++) {
+    badFoods.push({
+        x: random(200, 1240),
+        y: random(50, 660)
+    });
+}
 }
 
 function setup() {
@@ -111,8 +158,6 @@ function setup() {
 
     image(roadImage,200,50);
    
-
-
     p1Image.resize(p1Image.width * 0.2, p1Image.height * 0.2);
     p2Image.resize(p2Image.width * 0.2, p2Image.height * 0.2);
 };
@@ -141,14 +186,36 @@ function draw(){
         textFont('DotGothic16');
         text(`You are: ${playerID}`, 10, 100);
     }
+    
+    //score
+    //p1
+    image(p1Image,20,250);
+    text('p1 Momonga', 10, 240);
+    text('Score:', 90, 280);
 
-      //p1
+    //p2
+    image(p2Image,20,350);
+    text('p2 Chiikawa', 10, 340);
+    text('Score:', 90, 380);
+
+    //p1
       image(p1Image,p1_X,p1_Y);
-      //p2
+    //p2
       image(p2Image,p2_X,p2_Y);
+    // 绘制好食物
+      for (let i = 0; i < goodFoods.length; i++) {
+       image(goodImages[i % goodImages.length], goodFoods[i].x, goodFoods[i].y, foodsize, foodsize);
+    }
+
+    // 绘制坏食物
+      for (let i = 0; i < badFoods.length; i++) {
+       image(badImages[i % badImages.length], badFoods[i].x, badFoods[i].y, foodsize, foodsize);
+    }
 
 
 
+
+   
     socket.on("position1Fresh", function (position1) {
         if (playerID == "2p") {
           p1_Y = position1.y;
@@ -179,11 +246,9 @@ function keyPressed() {
     if (keyCode === 87 && isKeyPressed === false) {
         if (playerID == "1p") {
             p1_Y -= 10;
-            console.log("p1_Y:", p1_Y);
             socket.emit("position1", { x: p1_X, y: p1_Y });
         } else if (playerID == "2p") {
             p2_Y -= 10;
-            console.log("p2_Y:", p2_Y);
             socket.emit("position2", { x: p2_X, y: p2_Y });
         }
         isKeyPressed = true;
