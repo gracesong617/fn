@@ -88,10 +88,8 @@ Login.prototype.init = function () {
 //game
 
 let p1, p2, p1Image, p2Image, flashImage, roadImage, bgImage;
-let p1_X = Math.random() * 500 + 300;
-let p2_X = Math.random() * 500 + 300;
-let p1_Y = Math.random() * 500 + 100;
-let p2_Y = Math.random() * 500 + 100;
+let p1_X = 400,p2_X = 600;
+let p1_Y = 520,p2_Y = 520;
 let ystart = 520;
 let move;
 let isKeyPressed = false;
