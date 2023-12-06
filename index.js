@@ -14,6 +14,7 @@ server.listen(PORT, () => {
 let roomCodeList = [];
 let gamePlayer = 0;
 
+
 let goodFoods = generateFoodPositions(70);
 let badFoods = generateFoodPositions(60);
 
@@ -24,6 +25,7 @@ let p2score = 0;
 function refreshFoodPositions() {
   goodFoods = generateFoodPositions(70);
   badFoods = generateFoodPositions(60);
+  io.emit('foodPositions', { goodFoods, badFoods });
 }
 
 

@@ -1,6 +1,7 @@
 let socket = io.connect();
 let playerID;
 
+
 document.addEventListener("DOMContentLoaded", function () {
     var login = new Login();
     login.init();
@@ -158,13 +159,7 @@ function setup() {
      p2score = 0;
 };
 
-socket.on('foodPositions', (foodPositions) => {
-    // 从服务器接收到的食物位置
-    goodFoods = foodPositions.goodFoods;
-    badFoods = foodPositions.badFoods;
-    p1score = foodPositions.p1score; // 更新 p1score
-    p2score = foodPositions.p2score;
-});
+
 
 function draw(){
     clear();
