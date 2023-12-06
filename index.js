@@ -29,6 +29,7 @@ io.sockets.on("connection", (socket) => {
   
 
   if (roomCodeList.length > 2 ){
+    socket.disconnect(true); 
     return;
   }
   
@@ -98,7 +99,14 @@ io.sockets.on("connection", (socket) => {
     p1score = 0;
     p2score = 0;
     io.emit('resetScores', { p1score, p2score })
-  })
+  });
+
+  socket.on("refreshScreen", () => {
+    goodFoods = generateFoodPositions(70);
+    badFoods = generateFoodPositions(60);
+    io.emit('foodPositions', { goodFoods, badFoods });
+  });
+  
 
     // send food position to usera
   socket.emit('foodPositions', { goodFoods, badFoods });

@@ -9,7 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
 function Login() {
     this.socket = io.connect();
 }
+window.onbeforeunload = function() {
+    // 发送刷新屏幕事件
+    socket.emit("refreshScreen");
+  };
 
+  
 Login.prototype.init = function () {
     var self = this;
     //score become 0
@@ -221,7 +226,7 @@ function draw(){
         let distance1 = dist(p1_X, p1_Y, goodFoods[i].x, goodFoods[i].y);
         let distance2 = dist(p2_X, p2_Y, goodFoods[i].x, goodFoods[i].y);
 
-        if (distance1 < foodsize / 2 + 12) {
+        if (distance1 < foodsize / 2 + 11) {
             // good food, add score
             p1score++;
             // move good food
@@ -230,7 +235,7 @@ function draw(){
             socket.emit('eatFood', { playerId: '1p', foodType: 'good', foodIndex: i, p1score});
         }
 
-        if (distance2 < foodsize / 2 + 12) {
+        if (distance2 < foodsize / 2 + 11) {
             p2score++;
             goodFoods.splice(i, 1);
              //send to server
@@ -244,7 +249,7 @@ function draw(){
         let distance1 = dist(p1_X, p1_Y, badFoods[i].x, badFoods[i].y);
         let distance2 = dist(p2_X, p2_Y, badFoods[i].x, badFoods[i].y);
 
-        if (distance1 < foodsize / 2 + 12) {
+        if (distance1 < foodsize / 2 + 11) {
             // bad food, decrese socre
             p1score--;
             p1score = max(p1score, 0);
@@ -254,7 +259,7 @@ function draw(){
              socket.emit('eatFood', { playerId: '1p', foodType: 'bad', foodIndex: i,p1score});
         }
 
-        if (distance2 < foodsize / 2 + 12) {
+        if (distance2 < foodsize / 2 + 11) {
             p2score--;
             p2score = max(p2score, 0);
             badFoods.splice(i, 1);
