@@ -1,5 +1,5 @@
 //creating the express app
-let express= require("express");
+let express = require("express");
 let app = express();
 app.use("/", express.static("public"));
 
@@ -8,7 +8,7 @@ let http = require("http");
 let server = http.createServer(app);
 const PORT = process.env.PORT || 9999;
 server.listen(PORT, () => {
-    console.log("server on port ",PORT);
+  console.log("server on port ", PORT);
 });
 
 let roomCodeList = [];
@@ -20,19 +20,26 @@ let badFoods = generateFoodPositions(60);
 let p1score = 0;
 let p2score = 0;
 
+// Trigger event when a user enters a room
+function refreshFoodPositions() {
+  goodFoods = generateFoodPositions(70);
+  badFoods = generateFoodPositions(60);
+}
+
+
 //initialise socket.io
 let io = require("socket.io")(server);
 
 //listen for a new connection
 io.sockets.on("connection", (socket) => {
   console.log("new connection :", socket.id);
-  
 
-  if (roomCodeList.length > 2 ){
-    socket.disconnect(true); 
+
+  if (roomCodeList.length > 2) {
+    socket.disconnect(true);
     return;
   }
-  
+
   //create room
   socket.on("login", (playerName) => {
     console.log(playerName);
@@ -42,104 +49,99 @@ io.sockets.on("connection", (socket) => {
 
     // Print the room code to the server console
     console.log("Room code created:", roomCode);
-    
+
     // Send the room code to all clients
-     io.emit("loginSuccess", roomCode);
+    io.emit("loginSuccess", roomCode);
   })
 
   //incase of disconnection
-  socket.on("disconnect", function() {
+  socket.on("disconnect", function () {
     console.log("disconnection :", socket.id)
     roomCodeList = [];
     gamePlayer = 0;
-    socket.broadcast.emit("refresh");
+    //socket.broadcast.emit("refresh");
   });
 
-  socket.on("createRoom", function(roomCode){
+  socket.on("createRoom", function (roomCode) {
     //check roomcode
     //if roomcode not exist
     if (roomCodeList.indexOf(parseInt(roomCode)) != -1) {
-        //add roomcode
-        roomCodeList.push(roomCode);
+      //add roomcode
+      roomCodeList.push(roomCode);
 
-        //send add success
-        socket.emit("addSuccess");
+      //send add success
+      socket.emit("addSuccess");
 
-        //add player number
-        gamePlayer++;
+      //add player number
+      gamePlayer++;
 
-        //check player number
-        if (gamePlayer == 1 ){
-            socket.position = "1p";
-            socket.join(roomCode);
-            const playerID = "1p";
-            io.to(socket.id).emit("playerID", playerID);    
-            console.log("player joined:",playerID);
+      //check player number
+      if (gamePlayer == 1) {
+        socket.position = "1p";
+        socket.join(roomCode);
+        const playerID = "1p";
+        io.to(socket.id).emit("playerID", playerID);
+        console.log("player joined:", playerID);
 
-        } else if (gamePlayer == 2) {
-            socket.position = "2p";
-            socket.join(roomCode);
-            const playerID = "2p";
-            io.to(socket.id).emit("playerID", playerID);
-            console.log("player joined:",playerID);
-        } else {
-            socket.position = "wrong";
-        }
-        if (gamePlayer == 2) {
-            console.log("Reached enough players");
-            socket.emit("gameStart",socket.position)
-            socket.broadcast.emit("GameStart","1p");
-        }else {
-            socket.position = "wrong";
-        }
+      } else if (gamePlayer == 2) {
+        socket.position = "2p";
+        socket.join(roomCode);
+        const playerID = "2p";
+        io.to(socket.id).emit("playerID", playerID);
+        console.log("player joined:", playerID);
+      } else {
+        socket.position = "wrong";
+      }
+      if (gamePlayer == 2) {
+        console.log("Reached enough players");
+        socket.emit("gameStart", socket.position)
+        socket.broadcast.emit("GameStart", "1p");
+        refreshFoodPositions(); // Refresh food positions when 2 players are present
+      } else {
+        socket.position = "wrong";
+      }
     }
   });
 
-  socket.on('initScores',function(){
+  socket.on('initScores', function () {
     p1score = 0;
     p2score = 0;
     io.emit('resetScores', { p1score, p2score })
   });
 
-  socket.on("refreshScreen", () => {
-    goodFoods = generateFoodPositions(70);
-    badFoods = generateFoodPositions(60);
-    io.emit('foodPositions', { goodFoods, badFoods });
-  });
-  
 
-    // send food position to usera
+  // send food position to usera
   socket.emit('foodPositions', { goodFoods, badFoods });
 
-    // food collision
-    socket.on('eatFood', (data) => {
-      let { playerId,foodIndex, foodType } = data;
-      // remove food
-      if (foodType === 'good') {
-          goodFoods.splice(foodIndex, 1);
-      } else if (foodType === 'bad') {
-          badFoods.splice(foodIndex, 1);
-      }
-
-      //update score
-      if (playerId === '1p') {
-        if (foodType === 'good') {
-            p1score++;
-        } else if (foodType === 'bad') {
-            p1score--;
-            p1score = Math.max(p1score, 0); 
-        }
-    } else if (playerId === '2p') {
-        if (foodType === 'good') {
-            p2score++;
-        } else if (foodType === 'bad') {
-            p2score--;
-            p2score = Math.max(p2score, 0);
-        }
+  // food collision
+  socket.on('eatFood', (data) => {
+    let { playerId, foodIndex, foodType } = data;
+    // remove food
+    if (foodType === 'good') {
+      goodFoods.splice(foodIndex, 1);
+    } else if (foodType === 'bad') {
+      badFoods.splice(foodIndex, 1);
     }
 
-      // broadcast current food position and score
-      io.emit('foodPositions', { goodFoods, badFoods, p1score, p2score });
+    //update score
+    if (playerId === '1p') {
+      if (foodType === 'good') {
+        p1score++;
+      } else if (foodType === 'bad') {
+        p1score--;
+        p1score = Math.max(p1score, 0);
+      }
+    } else if (playerId === '2p') {
+      if (foodType === 'good') {
+        p2score++;
+      } else if (foodType === 'bad') {
+        p2score--;
+        p2score = Math.max(p2score, 0);
+      }
+    }
+
+    // broadcast current food position and score
+    io.emit('foodPositions', { goodFoods, badFoods, p1score, p2score });
   });
 
 
@@ -149,18 +151,18 @@ io.sockets.on("connection", (socket) => {
       var result = "1p";
       socket.emit("gameOver", result);
       socket.broadcast.emit("gameOver", result);
-  }
+    }
 
-  
+
   });
-  
+
   socket.on("position2", function (position2) {
     socket.broadcast.emit("position2Fresh", { x: position2.x, y: position2.y });
     if (p2score >= 10) {
       var result = "2p";
       socket.emit("gameOver", result);
       socket.broadcast.emit("gameOver", result);
-  }
+    }
   });
 
 });
@@ -170,10 +172,10 @@ function generateFoodPositions(count) {
   const foodPositions = [];
 
   for (let i = 0; i < count; i++) {
-      foodPositions.push({
-          x: Math.random() * 990 + 260,
-          y: Math.random() * 600 + 50
-      });
+    foodPositions.push({
+      x: Math.random() * 990 + 260,
+      y: Math.random() * 600 + 50
+    });
   }
 
   return foodPositions;

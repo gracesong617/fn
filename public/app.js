@@ -9,12 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
 function Login() {
     this.socket = io.connect();
 }
-window.onbeforeunload = function() {
-    // 发送刷新屏幕事件
-    socket.emit("refreshScreen");
-  };
 
-  
+
+
 Login.prototype.init = function () {
     var self = this;
     //score become 0
@@ -270,8 +267,11 @@ function draw(){
 
 
     socket.on('foodPositions', (foodPositions) => {
-        goodFoods = foodPositions.goodFoods;
-        badFoods = foodPositions.badFoods;
+    // 从服务器接收到的食物位置
+    goodFoods = foodPositions.goodFoods;
+    badFoods = foodPositions.badFoods;
+    p1score = foodPositions.p1score; // 更新 p1score
+    p2score = foodPositions.p2score;
     });
 
    
