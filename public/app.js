@@ -177,6 +177,9 @@ function draw(){
      fill(0);
      textFont('DotGothic16');
      text('press w,a,s,d to move character',10,130);
+     text('Collect foods to get points',10,150)
+     text('Avoid non-food',10,170)
+     text('How to win: get 10 points', 10,190);
 
     
     if (playerID) { 
