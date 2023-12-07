@@ -1,6 +1,7 @@
 let socket = io.connect();
 let playerID;
 
+let playerAdded = false; 
 
 document.addEventListener("DOMContentLoaded", function () {
     var login = new Login();
@@ -75,6 +76,7 @@ Login.prototype.init = function () {
         var textElement = document.querySelector(".join .text");
         if (textElement) {
           textElement.textContent = "Wait For Another Player";
+          playerAdded = true; 
           console.log(playerID);
         }
     });
@@ -121,6 +123,7 @@ let badFoods = [];
 let goodImages = []; 
 let badImages = []; 
 let foodsize= 20;
+let foodImagesLoaded = false;
 
 
 function preload(){
@@ -188,6 +191,9 @@ function draw(){
     }
     
     //score
+
+    handleKeyInput();
+
     //p1
     image(p1Image,20,250);
     text('p1 Momonga', 10, 240);
@@ -198,10 +204,21 @@ function draw(){
     text('p2 Chiikawa', 10, 340);
     text(`Score: ${p2score}`, 90, 380);
 
-    //p1 character
-      image(p1Image,p1_X,p1_Y);
-    //p2 character
-      image(p2Image,p2_X,p2_Y);
+    if (playerAdded) {
+        // p1 character
+        if (playerID == '1p') {
+            image(p1Image, p1_X, p1_Y);
+        }
+
+        // p2 character
+        if (playerID == '2p') {
+            image(p1Image, p1_X, p1_Y);
+            image(p2Image, p2_X, p2_Y);
+        } else {
+            image(p1Image, p1_X, p1_Y);
+            image(p2Image, p2_X, p2_Y);
+        }
+    }
 
     // good food
       for (let i = 0; i < goodFoods.length; i++) {
@@ -262,10 +279,10 @@ function draw(){
 
 
     socket.on('foodPositions', (foodPositions) => {
-    // 从服务器接收到的食物位置
+    // receive food position
     goodFoods = foodPositions.goodFoods;
     badFoods = foodPositions.badFoods;
-    p1score = foodPositions.p1score; // 更新 p1score
+    p1score = foodPositions.p1score; 
     p2score = foodPositions.p2score;
     });
 
@@ -290,72 +307,66 @@ function draw(){
     });
 
     socket.on("gameOver", function (result) {
-        alert(result + " is the Winner");
+        var userConfirmed = window.confirm(result + " is the Winner. Do you want to play again?");
+        
+        if (userConfirmed) {
+            window.location.reload();
+        } else {
+            window.close(); 
+        }
     });
 }
 
 
-function keyPressed() {
+function handleKeyInput() {
     //w
-    if (keyCode === 87 && isKeyPressed === false) {
+    if (keyCode === 87 ) {
         if (playerID == "1p") {
-            p1_Y -= 10;
+            p1_Y -= 1;
             socket.emit("position1", { x: p1_X, y: p1_Y });
         } else if (playerID == "2p") {
-            p2_Y -= 10;
+            p2_Y -= 1;
             socket.emit("position2", { x: p2_X, y: p2_Y });
         }
-        isKeyPressed = true;
     }
     //a
-    if (keyCode === 65 && isKeyPressed === false) {
+    if (keyCode === 65) {
         if (playerID == "1p") {
-            p1_X -= 10;
+            p1_X -= 1;
             socket.emit("position1", { x: p1_X, y: p1_Y });
         } else if (playerID == "2p") {
-            p2_X -= 10;
+            p2_X -= 1;
             socket.emit("position2", { x: p2_X, y: p2_Y });
         }
-        isKeyPressed = true;
     }
     //s
-    if (keyCode === 83 && isKeyPressed === false) {
+    if (keyCode === 83) {
         if (playerID == "1p") {
-            p1_Y += 10;
+            p1_Y += 1;
             socket.emit("position1", { x: p1_X, y: p1_Y });
         } else if (playerID == "2p") {
-            p2_Y += 10;
+            p2_Y += 1;
             socket.emit("position2", { x: p2_X, y: p2_Y });
         }
-        isKeyPressed = true;
     }
     //d
-    if (keyCode === 68 && isKeyPressed === false) {
+    if (keyCode === 68 ) {
         if (playerID == "1p") {
-            p1_X += 10;
+            p1_X += 1;
             socket.emit("position1", { x: p1_X, y: p1_Y });
         } else if (playerID == "2p") {
-            p2_X += 10;
+            p2_X += 1;
             socket.emit("position2", { x: p2_X, y: p2_Y });
         }
-        isKeyPressed = true;
     }
+    if (!isKeyPressed) {
+        // 停止移动的逻辑
+        if (playerID === "1p") {
+            socket.emit("position1", { x: p1_X, y: p1_Y });
+        } else if (playerID === "2p") {
+            socket.emit("position2", { x: p2_X, y: p2_Y });
+        }
+    }
+
 }
-
-function keyReleased() {
-    if (keyCode === 87) {
-        isKeyPressed = false;
-    }
-    if (keyCode === 65) {
-        isKeyPressed = false;
-    }
-    if (keyCode === 83) {
-        isKeyPressed = false;
-    }
-    if (keyCode === 68) {
-        isKeyPressed = false;
-    }
-}
-
-
 

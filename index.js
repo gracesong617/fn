@@ -14,7 +14,6 @@ server.listen(PORT, () => {
 let roomCodeList = [];
 let gamePlayer = 0;
 
-
 let goodFoods = generateFoodPositions(70);
 let badFoods = generateFoodPositions(60);
 
@@ -128,16 +127,16 @@ io.sockets.on("connection", (socket) => {
     //update score
     if (playerId === '1p') {
       if (foodType === 'good') {
-        p1score++;
+        p1score ++;
       } else if (foodType === 'bad') {
-        p1score--;
+        p1score --;
         p1score = Math.max(p1score, 0);
       }
     } else if (playerId === '2p') {
       if (foodType === 'good') {
-        p2score++;
+        p2score ++;
       } else if (foodType === 'bad') {
-        p2score--;
+        p2score --;
         p2score = Math.max(p2score, 0);
       }
     }
