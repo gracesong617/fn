@@ -1,0 +1,36 @@
+.room {
+    height: 100vh;
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3e8cc;
+    font-family: 'Indie Flower', cursive;
+    font-size: 20px;
+}
+
+.build{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 10px;
+    margin:10px;
+    height: 150px;
+}
+
+.button {
+    background-color: #EEDE72;
+    border: none;
+    color: #DD525A;
+    padding: 8px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    font-family: 'Indie Flower', cursive;
+}

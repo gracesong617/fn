@@ -11,30 +11,38 @@
       href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"
       rel="stylesheet"
     />
+
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <h1 class="title">Game</h1>
+    <div class="room">
 
-    <div class="build">
-        <h2 class="text">Create your room</h2>
-        <h3 class="text">Please click on the button to get the room code</h3>
-        <input type="button" value="bulid room" id="build-button">
+    <img src="images/title.png" width="400">
+
+
+    <div class="build" id="container">
+      <img src="images/title2.png" width="300">
+      <img src="images/title3.png" width="500">
+      <input class="button" type="button" value="Bulid room" id="build-button">
+        
     </div>
 
-    <div class="result">
+    <div class="result" id="container">
         <span class="notice">error</span>
         <span class="connect">connect faild</span>
         <span class="text"></span>
     </div>
 
-    <div class="join">
+    <div class="join" id="container">
         <h4 class="text">Join the room to start the game</h4>
         <input type="text" placeholder="please input you room code" id="join-text">
-        <input type="button" value="join room" id="join-button">
+        <input class="button" type="button" value="Join Room" id="join-button">
         <span class="text"></span>
     </div>
+  </div>
 
 
 
