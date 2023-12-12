@@ -34,3 +34,14 @@
     border-radius: 12px;
     font-family: 'Indie Flower', cursive;
 }
+.join{
+    color: #DD525A;
+}
+
+.result{
+    color: #DD525A;
+
+}
+.canvas-container{
+    width:100%;
+}

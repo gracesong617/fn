@@ -131,8 +131,7 @@ function preload(){
 
     p2Image = loadImage('images/p2.png');
 
-    flashImage = loadImage('images/flash.jpg');
-    roadImage = loadImage('images/road_bg.jpg');
+
     bgImage = loadImage('images/bg1.png');
    
     // load good 
@@ -150,7 +149,10 @@ function preload(){
 
 
 function setup() {
-    createCanvas(1280, 720);
+    const myCanvas = createCanvas(1280,720);
+	//Set the parent of the canvas to an exisitng html element's id value 
+	myCanvas.parent("canvas-container");
+   // createCanvas(1280, 720);
     socket = io.connect();
 
     
@@ -165,11 +167,15 @@ function setup() {
 
 
 function draw(){
+    const myCanvas = createCanvas(windowWidth,720);
+	//Set the parent of the canvas to an exisitng html element's id value 
+	myCanvas.parent("canvas-container");
     clear();
+
     background("#f3e8cc");
     fill("#ffe5e5");
     noStroke();
-    rect(250,20,1080,700);
+    rect(250,20,1030,700);
     image(bgImage,0,0,1280,720);
 
      // hint
