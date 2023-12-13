@@ -151,7 +151,7 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("position1", function (position1) {
     socket.broadcast.emit("position1Fresh", { x: position1.x, y: position1.y });
-    if (p1score >= 10) {
+    if (p1score >= 20) {
       var result = "1p";
       socket.emit("gameOver", result);
       socket.broadcast.emit("gameOver", result);
@@ -162,7 +162,7 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("position2", function (position2) {
     socket.broadcast.emit("position2Fresh", { x: position2.x, y: position2.y });
-    if (p2score >= 10) {
+    if (p2score >= 20) {
       var result = "2p";
       socket.emit("gameOver", result);
       socket.broadcast.emit("gameOver", result);
