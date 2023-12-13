@@ -149,7 +149,7 @@ let p1good, p1bad, p2good, p2bad, winsound;
 function preload() {
     p1Image = loadImage('images/p1.png');
 
-    p2Image = loadImage('images/p2.png');
+    p2Image = loadImage('images/p4.png');
 
     hintImage = loadImage('images/hint.png');
 
@@ -237,7 +237,7 @@ function draw() {
 
     //p2
     image(p2Image, 20, 450);
-    text('p2 Chiikawa', 10, 440);
+    text('p2 Usagi', 10, 440);
     text(`Score: ${p2score}`, 90, 480);
 
     if (playerAdded) {
