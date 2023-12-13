@@ -167,8 +167,8 @@ function preload() {
 
     p1good = loadSound('music/p1good.m4a', () => { p1good.setVolume(8); });
     p1bad = loadSound('music/p1bad.m4a', () => { p1bad.setVolume(8); });
-    p2good = loadSound('music/p2good.m4a', () => { p2good.setVolume(8); });
-    p2bad = loadSound('music/p2bad.m4a', () => { p2bad.setVolume(8); });
+    p2good = loadSound('music/p2good.m4a', () => { p2good.setVolume(20); });
+    p2bad = loadSound('music/p2bad.m4a', () => { p2bad.setVolume(0.5); });
     winsound = loadSound('music/win.m4a', () => { winsound.setVolume(8); });
 
 
