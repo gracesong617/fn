@@ -90,13 +90,16 @@ io.sockets.on("connection", (socket) => {
         const playerID = "2p";
         io.to(socket.id).emit("playerID", playerID);
         console.log("player joined:", playerID);
+        socket.emit("gameStart", socket.position)
       } else {
         socket.position = "wrong";
       }
       if (gamePlayer == 2) {
         console.log("Reached enough players");
         socket.emit("gameStart", socket.position)
+        io.to(roomCode).emit("gameStart"); 
         socket.broadcast.emit("GameStart", "1p");
+        socket.broadcast.emit("GameStart", "2p");
         refreshFoodPositions(); // Refresh food positions when 2 players are present
       } else {
         socket.position = "wrong";

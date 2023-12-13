@@ -80,6 +80,13 @@ Login.prototype.init = function () {
           console.log(playerID);
         }
     });
+    self.socket.on("gameStart", function () {
+        var textElement = document.querySelector(".join .text");
+        if (textElement) {
+          textElement.textContent = "Scroll down to start the game!";
+          console.log(playerID);
+        }
+    });
     self.socket.on("playerID", function (receivedPlayerID) {
         playerID = receivedPlayerID;
         window.player = playerID;
