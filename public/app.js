@@ -34,6 +34,7 @@ Login.prototype.init = function () {
             var textElement = document.querySelector(".result .connect");
             if (textElement) {
                 textElement.textContent = "Connect Success!";
+                backgroundMusic.volume = 0.2;
                 document.addEventListener("click",function(){
                     backgroundMusic.play();
                     musicPlayed = true;
@@ -143,6 +144,7 @@ let badImages = [];
 let foodsize = 20;
 let foodImagesLoaded = false;
 
+let p1good, p1bad, p2good, p2bad, winsound;
 
 function preload() {
     p1Image = loadImage('images/p1.png');
@@ -162,6 +164,13 @@ function preload() {
     for (let i = 0; i < badArray.length; i++) {
         badImages.push(loadImage(badArray[i]));
     }
+
+    p1good = loadSound('music/p1good.m4a', () => { p1good.setVolume(8); });
+    p1bad = loadSound('music/p1bad.m4a', () => { p1bad.setVolume(8); });
+    p2good = loadSound('music/p2good.m4a', () => { p2good.setVolume(8); });
+    p2bad = loadSound('music/p2bad.m4a', () => { p2bad.setVolume(8); });
+    winsound = loadSound('music/win.m4a', () => { winsound.setVolume(8); });
+
 
 }
 
@@ -265,6 +274,7 @@ function draw() {
         if (distance1 < foodsize / 2 + 11) {
             // good food, add score
             p1score++;
+            p1good.play();
             // move good food
             goodFoods.splice(i, 1);
             //send to server
@@ -273,6 +283,7 @@ function draw() {
 
         if (distance2 < foodsize / 2 + 11) {
             p2score++;
+            p2good.play();
             goodFoods.splice(i, 1);
             //send to server
             socket.emit('eatFood', { playerId: '2p', foodType: 'good', foodIndex: i, p2score });
@@ -288,6 +299,7 @@ function draw() {
         if (distance1 < foodsize / 2 + 11) {
             // bad food, decrese socre
             p1score--;
+            p1bad.play();
             p1score = max(p1score, 0);
             // move bad food
             badFoods.splice(i, 1);
@@ -297,6 +309,7 @@ function draw() {
 
         if (distance2 < foodsize / 2 + 11) {
             p2score--;
+            p2bad.play();
             p2score = max(p2score, 0);
             badFoods.splice(i, 1);
             //send to server
@@ -334,6 +347,8 @@ function draw() {
     });
 
     socket.on("gameOver", function (result) {
+        winsound.play();
+
         var userConfirmed = window.confirm(result + " is the Winner. Do you want to play again?");
 
         if (userConfirmed) {
